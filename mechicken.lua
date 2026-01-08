@@ -30,7 +30,7 @@ text.TextWrapped = true
 text.Font = Enum.Font.GothamBold
 text.TextSize = 20
 text.TextColor3 = Color3.fromRGB(255, 200, 0)
-text.Text = "Loading key system…"
+text.Text = "Loading key system…btw make sure u put the key while ur in lobby and read what the script says."
 text.Parent = frame
 
 -- ===============================
