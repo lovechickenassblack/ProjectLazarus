@@ -23,7 +23,7 @@ local text = Instance.new("TextLabel")
 text.Size = UDim2.new(1, -20, 1, -20)
 text.Position = UDim2.new(0, 10, 0, 10)
 text.BackgroundTransparency = 1
-text.Text = ":warning: CAUTION :warning:\n\nPlease execute 2 times or more if it doesnt show up"
+text.Text = "Please execute 2-3 times FAST if it doesnt show up.. ANDDD.. if the script doesnt show up after putting key then execute 2-3 times FAST again and put key again"
 text.TextColor3 = Color3.fromRGB(255, 200, 0)
 text.TextWrapped = true
 text.Font = Enum.Font.GothamBold
@@ -31,7 +31,7 @@ text.TextSize = 20
 text.Parent = frame
 
 
-task.delay(4, function()
+task.delay(10, function()
     gui:Destroy()
 end)
 
