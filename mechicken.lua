@@ -15,11 +15,9 @@ frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.BorderSizePixel = 0
 frame.Parent = gui
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
-corner.Parent = frame
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
-local stroke = Instance.new("UIStroke")
+local stroke = Instance.new("UIStroke", frame)
 stroke.Thickness = 2
 stroke.Color = Color3.fromRGB(255, 170, 0)
 stroke.Parent = frame
@@ -28,30 +26,50 @@ local text = Instance.new("TextLabel")
 text.Size = UDim2.new(1, -20, 1, -20)
 text.Position = UDim2.new(0, 10, 0, 10)
 text.BackgroundTransparency = 1
-text.Text = "Loading key system… please wait"
-text.TextColor3 = Color3.fromRGB(255, 200, 0)
 text.TextWrapped = true
 text.Font = Enum.Font.GothamBold
 text.TextSize = 20
+text.TextColor3 = Color3.fromRGB(255, 200, 0)
+text.Text = "Loading key system…"
 text.Parent = frame
 
-task.delay(10, function()
-    if gui then
-        gui:Destroy()
+-- ===============================
+-- JUNKIE AUTO-EXEC UNTIL LOADED
+-- ===============================
+
+local JUNKIE_URL = "https://api.junkie-development.de/api/v1/luascripts/public/3e73ebff1af450511d7cf0bda858517be15f5f269ac343792ac557701ce4a4f1/download"
+
+local HttpService = game:GetService("HttpService")
+local MAX_TRIES = 10
+local tries = 0
+
+local function junkieLoaded()
+    for _, v in ipairs(player.PlayerGui:GetChildren()) do
+        if v:IsA("ScreenGui") and v ~= gui then
+            return true
+        end
     end
-end)
+    for _, v in ipairs(game:GetService("CoreGui"):GetChildren()) do
+        if v:IsA("ScreenGui") then
+            return true
+        end
+    end
+    return false
+end
 
--- ===============================
--- JUNKIE AUTO-EXECUTION FIX
--- ===============================
+while tries < MAX_TRIES do
+    tries += 1
 
-local JUNKIE_URL = "https://api.junkie-development.de/api/v1/luascripts/public/3e73ebff1af450511d7cf0bda858517be15f5f269ac343792ac557701ce4a4f1/download"))()"
-
-for i = 1, 3 do
-    task.spawn(function()
-        pcall(function()
-            loadstring(game:HttpGet(JUNKIE_URL))()
-        end)
+    pcall(function()
+        loadstring(game:HttpGet(JUNKIE_URL))()
     end)
-    task.wait(0.15) -- small delay to avoid collisions
+
+    task.wait(0.25)
+
+    if junkieLoaded() then
+        text.Text = "Key system loaded ✔"
+        task.wait(0.5)
+        gui:Destroy()
+        break
+    end
 end
