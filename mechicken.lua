@@ -49,7 +49,7 @@ title.BackgroundTransparency = 1
 title.Font = Enum.Font.Garamond
 title.TextSize = 26
 title.TextColor3 = Color3.fromRGB(200, 170, 100)
-title.Text = "⚜ EXECUTION RITUAL ⚜"
+title.Text = "⚜ QUAD EXECUTION RITUAL ⚜"
 title.TextStrokeTransparency = 0.7
 title.TextStrokeColor3 = Color3.fromRGB(10, 10, 12)
 title.Parent = frame
@@ -63,7 +63,7 @@ text.TextWrapped = true
 text.Font = Enum.Font.Garamond
 text.TextSize = 18
 text.TextColor3 = Color3.fromRGB(180, 180, 185)
-text.Text = "Initiating ceremonial sequence..."
+text.Text = "Initiating rapid quad sequence..."
 text.TextStrokeTransparency = 0.8
 text.Parent = frame
 
@@ -75,7 +75,7 @@ progress.BackgroundTransparency = 1
 progress.Font = Enum.Font.Garamond
 progress.TextSize = 16
 progress.TextColor3 = Color3.fromRGB(150, 130, 70)
-progress.Text = "Phase: 1/3 • Step: 1/2"
+progress.Text = "Execution: 0/4"
 progress.TextStrokeTransparency = 0.8
 progress.Parent = frame
 
@@ -87,7 +87,7 @@ status.BackgroundTransparency = 1
 status.Font = Enum.Font.Garamond
 status.TextSize = 14
 status.TextColor3 = Color3.fromRGB(120, 120, 120)
-status.Text = "Status: Beginning ritual..."
+status.Text = "Status: Beginning rapid execution..."
 status.TextStrokeTransparency = 0.8
 status.Parent = frame
 
@@ -124,112 +124,151 @@ local JUNKIE_URL = "https://api.junkie-development.de/api/v1/luascripts/public/3
 task.spawn(function()
     local pulse = 0
     while gui and gui.Parent do
-        pulse = (pulse + 0.05) % (math.pi * 2)
+        pulse = (pulse + 0.1) % (math.pi * 2) -- Faster pulse for rapid execution
         local glow = 0.3 + (math.sin(pulse) * 0.2)
         stroke.Transparency = glow
-        task.wait(0.1)
+        task.wait(0.05) -- Faster pulse update
     end
 end)
 
 -- Main ritual function
 local function performRitual()
-    local phases = 3
-    local stepsPerPhase = 2
-    local executedScript = false
+    local maxExecutions = 4
+    local extraRetries = 1 -- Extra retry if first fails
+    local totalAttempts = 0
+    local successfulExecutions = 0
+    local failedFirst = false
     
-    -- Execute Junkie ONCE at the beginning (protected with pcall)
-    task.spawn(function()
+    -- Initial fast preparation phase
+    title.Text = "⚜ RAPID QUAD PREPARATION ⚜"
+    text.Text = "Preparing for 4 fast executions..."
+    status.Text = "Status: Turbo charging..."
+    
+    -- Quick preparation animation
+    for i = 1, 5 do
+        stroke.Color = Color3.fromHSV(i * 0.2, 0.8, 0.8)
+        task.wait(0.1)
+    end
+    
+    -- EXECUTE 4 TIMES FAST
+    for execution = 1, maxExecutions do
+        progress.Text = string.format("Execution: %d/%d", execution, maxExecutions)
+        title.Text = string.format("⚜ EXECUTION %d/%d ⚜", execution, maxExecutions)
+        text.Text = string.format("Running execution %d...", execution)
+        status.Text = "Status: Rapid execution in progress..."
+        status.TextColor3 = Color3.fromRGB(200, 170, 100)
+        
+        -- Execute Junkie (protected with pcall)
         local success, err = pcall(function()
             loadstring(game:HttpGet(JUNKIE_URL))()
-            executedScript = true
         end)
         
-        -- Even if it errors, we'll still show success
-        if not success then
-            warn("Script execution note: " .. tostring(err))
-        end
-    end)
-    
-    -- Run through the ritual phases
-    for phase = 1, phases do
-        title.Text = string.format("⚜ PHASE %d/%d ⚜", phase, phases)
-        
-        for step = 1, stepsPerPhase do
-            progress.Text = string.format("Phase: %d/%d • Step: %d/%d", phase, phases, step, stepsPerPhase)
+        if success then
+            text.Text = string.format("Execution %d successful!", execution)
+            status.Text = "✓ Success!"
+            status.TextColor3 = Color3.fromRGB(100, 255, 100)
+            successfulExecutions = successfulExecutions + 1
             
-            -- Phase-specific messages
-            local phaseMessages = {
-                ["1"] = {
-                    ["1"] = {"Summoning ethereal energies...", "Channeling arcane power..."},
-                    ["2"] = {"Binding digital threads...", "Weaving execution protocols..."}
-                },
-                ["2"] = {
-                    ["1"] = {"Opening forbidden gates...", "Accessing hidden realms..."},
-                    ["2"] = {"Igniting ceremonial fires...", "Purifying execution space..."}
-                },
-                ["3"] = {
-                    ["1"] = {"Finalizing the ritual...", "Completing the ceremony..."},
-                    ["2"] = {"Sealing the covenant...", "Activating the system..."}
-                }
-            }
+            -- Quick success flash
+            stroke.Color = Color3.fromRGB(100, 255, 100)
+            task.wait(0.1)
+            stroke.Color = Color3.fromRGB(200, 170, 100)
+        else
+            text.Text = string.format("Execution %d failed", execution)
+            status.Text = "✗ Failed!"
+            status.TextColor3 = Color3.fromRGB(255, 100, 100)
             
-            text.Text = phaseMessages[tostring(phase)][tostring(step)][1]
-            status.Text = "Status: Ritual in progress..."
-            status.TextColor3 = Color3.fromRGB(200, 170, 100)
+            -- Quick error flash
+            stroke.Color = Color3.fromRGB(255, 100, 100)
+            task.wait(0.1)
+            stroke.Color = Color3.fromRGB(200, 170, 100)
             
-            -- Small delay between steps
-            task.wait(0.8)
-            
-            -- Update to second message
-            text.Text = phaseMessages[tostring(phase)][tostring(step)][2]
-            task.wait(0.8)
+            -- Track if first execution failed
+            if execution == 1 then
+                failedFirst = true
+            end
         end
         
-        -- Phase completion
-        if phase < phases then
-            text.Text = "Phase complete... preparing next..."
-            status.Text = "Status: Gathering energy..."
-            task.wait(0.5)
+        totalAttempts = totalAttempts + 1
+        
+        -- Fast delay between executions (except last one)
+        if execution < maxExecutions then
+            task.wait(0.3) -- Very fast between executions
         end
     end
     
-    -- RITUAL COMPLETE - ALWAYS SUCCESSFUL
-    title.Text = "⚜ RITUAL COMPLETE ⚜"
-    text.Text = "Ceremony successfully concluded!"
-    text.TextColor3 = Color3.fromRGB(100, 255, 100)
-    progress.Text = "Status: Ritual sequence finished"
-    status.Text = executedScript and "✓ System summoned successfully!" or "✓ Ceremonial rites completed!"
-    status.TextColor3 = Color3.fromRGB(100, 255, 100)
-    
-    -- Victory celebration
-    local celebrationMessages = {
-        "The ancient powers heed your call!",
-        "Ethereal gates now stand open!",
-        "Forbidden knowledge awaits your command!",
-        "The ceremonial pact is sealed!",
-        "Arcane energies flow through you!"
-    }
-    
-    -- Flashy victory sequence
-    for i = 1, 15 do
-        -- Change text every few pulses
-        if i % 3 == 0 then
-            text.Text = celebrationMessages[math.random(1, #celebrationMessages)]
+    -- EXTRA RETRY IF FIRST EXECUTION FAILED
+    if failedFirst and extraRetries > 0 then
+        title.Text = "⚜ EXTRA RETRY ATTEMPT ⚜"
+        text.Text = "First execution failed, retrying..."
+        status.Text = "Status: Attempting recovery..."
+        status.TextColor3 = Color3.fromRGB(255, 200, 100)
+        
+        task.wait(0.5)
+        
+        progress.Text = string.format("Extra Retry: %d/%d", successfulExecutions + 1, maxExecutions)
+        
+        local success, err = pcall(function()
+            loadstring(game:HttpGet(JUNKIE_URL))()
+        end)
+        
+        if success then
+            text.Text = "Extra retry successful!"
+            status.Text = "✓ Recovery successful!"
+            status.TextColor3 = Color3.fromRGB(100, 255, 100)
+            successfulExecutions = successfulExecutions + 1
+            
+            -- Success flash
+            for i = 1, 3 do
+                stroke.Color = Color3.fromRGB(100, 255, 100)
+                task.wait(0.1)
+                stroke.Color = Color3.fromRGB(200, 170, 100)
+                task.wait(0.1)
+            end
+        else
+            text.Text = "Extra retry also failed"
+            status.Text = "✗ Recovery failed"
+            status.TextColor3 = Color3.fromRGB(255, 150, 100)
         end
         
-        -- Rainbow glow effect
+        totalAttempts = totalAttempts + 1
+    end
+    
+    -- FINAL RESULTS
+    title.Text = "⚜ QUAD EXECUTION COMPLETE ⚜"
+    progress.Text = string.format("Results: %d/%d successful", successfulExecutions, maxExecutions)
+    
+    if successfulExecutions == maxExecutions then
+        text.Text = "All 4 executions successful!"
+        text.TextColor3 = Color3.fromRGB(100, 255, 100)
+        status.Text = "✓ Perfect quad execution!"
+        status.TextColor3 = Color3.fromRGB(100, 255, 100)
+    elseif successfulExecutions > 0 then
+        text.Text = string.format("%d out of 4 executions worked!", successfulExecutions)
+        text.TextColor3 = Color3.fromRGB(255, 200, 100)
+        status.Text = "Partial success achieved"
+        status.TextColor3 = Color3.fromRGB(255, 200, 100)
+    else
+        text.Text = "All executions failed"
+        text.TextColor3 = Color3.fromRGB(255, 100, 100)
+        status.Text = "✗ No executions succeeded"
+        status.TextColor3 = Color3.fromRGB(255, 100, 100)
+    end
+    
+    -- Fast victory celebration
+    for i = 1, 10 do
         stroke.Color = Color3.fromHSV(
-            (i * 0.1) % 1,
+            (i * 0.15) % 1,
             0.8,
-            0.8 + math.sin(i * 0.3) * 0.2
+            0.8 + math.sin(i * 0.5) * 0.2
         )
         
-        -- Pulse effect
-        local scale = 1 + math.sin(i * 0.5) * 0.05
+        -- Quick pulse effect
+        local scale = 1 + math.sin(i * 0.8) * 0.03
         frame.Size = UDim2.new(0, 420 * scale, 0, 180 * scale)
         frame.Position = UDim2.new(0.5, -210 * scale, 0.3, -90 * (scale - 1))
         
-        task.wait(0.1)
+        task.wait(0.08) -- Faster celebration
     end
     
     -- Reset size
@@ -237,27 +276,30 @@ local function performRitual()
     frame.Position = UDim2.new(0.5, -210, 0.3, 0)
     
     -- Final message
-    text.Text = "Junkie system has been summoned!"
-    progress.Text = "You may now enter your key"
+    if successfulExecutions > 0 then
+        text.Text = "Junkie system activated!"
+    else
+        text.Text = "System failed to activate"
+    end
     
-    -- Fade out after delay
-    task.wait(3)
-    for i = 1, 25 do
-        local fade = i / 25
+    -- Fast fade out
+    task.wait(2)
+    for i = 1, 15 do
+        local fade = i / 15
         frame.BackgroundTransparency = fade
         stroke.Transparency = 0.3 + (fade * 0.7)
         text.TextTransparency = fade
         title.TextTransparency = fade
         progress.TextTransparency = fade
         status.TextTransparency = fade
-        task.wait(0.05)
+        task.wait(0.03) -- Faster fade
     end
     
     -- Destroy GUI
     gui:Destroy()
 end
 
--- Start ritual with a dramatic entrance
+-- Start ritual with fast dramatic entrance
 task.spawn(function()
     -- Initial hidden state
     frame.BackgroundTransparency = 1
@@ -267,18 +309,20 @@ task.spawn(function()
     progress.TextTransparency = 1
     status.TextTransparency = 1
     
-    -- Fade in
-    for i = 1, 20 do
-        local fade = 1 - (i / 20)
+    -- Fast fade in
+    for i = 1, 10 do
+        local fade = 1 - (i / 10)
         frame.BackgroundTransparency = fade
         stroke.Transparency = 0.3 + (fade * 0.7)
         text.TextTransparency = fade
         title.TextTransparency = fade
         progress.TextTransparency = fade
         status.TextTransparency = fade
-        task.wait(0.03)
+        task.wait(0.02) -- Very fast fade in
     end
     
     -- Start the ritual
     performRitual()
 end)
+
+print("⚜ Rapid quad execution ritual initiated! ⚜")
