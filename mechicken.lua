@@ -179,21 +179,7 @@ local innerCorner = Instance.new("UICorner")
 innerCorner.CornerRadius = UDim.new(0, 6)
 innerCorner.Parent = innerShadow
 
--- Retry Button
-local retryButton = Instance.new("TextButton")
-retryButton.Size = UDim2.new(1, -20, 1, -20)
-retryButton.Position = UDim2.new(0, 10, 0, 10)
-retryButton.BackgroundColor3 = Color3.fromRGB(60, 30, 50)
-retryButton.BackgroundTransparency = 0.3
-retryButton.BorderSizePixel = 0
-retryButton.Text = "Keep Clicking Here Until Gui shows up"
-retryButton.Font = Enum.Font.Garamond
-retryButton.TextSize = 16
-retryButton.TextColor3 = Color3.fromRGB(180, 160, 180)
-retryButton.TextStrokeTransparency = 0.7
-retryButton.TextStrokeColor3 = Color3.fromRGB(20, 10, 20)
-retryButton.ZIndex = 1001
-retryButton.Parent = buttonFrame
+
 
 local innerButtonCorner = Instance.new("UICorner")
 innerButtonCorner.CornerRadius = UDim.new(0, 6)
@@ -211,7 +197,7 @@ textGlow.Name = "TextGlow"
 textGlow.Size = UDim2.new(1, 0, 1, 0)
 textGlow.Position = UDim2.new(0, 0, 0, 0)
 textGlow.BackgroundTransparency = 1
-textGlow.Text = "Click Here 1 or 2 times If\nGui Doesn't Show Up"
+textGlow.Text = "Keep Clicking Here Until Gui Shows UP!!"
 textGlow.Font = Enum.Font.Garamond
 textGlow.TextSize = 16
 textGlow.TextColor3 = Color3.fromRGB(200, 180, 200)
