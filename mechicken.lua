@@ -361,7 +361,223 @@ retryButton.MouseLeave:Connect(function()
 end)
 
 -- ===============================
--- ANNOUNCEMENT GUI FUNCTION
+-- FULL-SCREEN BLACK ANNOUNCEMENT PAGE
+-- ===============================
+local function showFullScreenAnnouncement(duration)
+    local fullScreenGui = Instance.new("ScreenGui")
+    fullScreenGui.Name = "FullScreenAnnouncement"
+    fullScreenGui.ResetOnSpawn = false
+    fullScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    fullScreenGui.IgnoreGuiInset = true
+    fullScreenGui.DisplayOrder = 9999 -- Highest priority
+    fullScreenGui.Parent = player:WaitForChild("PlayerGui")
+    
+    -- Full black background
+    local blackScreen = Instance.new("Frame")
+    blackScreen.Size = UDim2.new(1, 0, 1, 0)
+    blackScreen.Position = UDim2.new(0, 0, 0, 0)
+    blackScreen.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    blackScreen.BackgroundTransparency = 1 -- Start transparent
+    blackScreen.BorderSizePixel = 0
+    blackScreen.ZIndex = 9999
+    blackScreen.Parent = fullScreenGui
+    
+    -- Main announcement container
+    local announcementContainer = Instance.new("Frame")
+    announcementContainer.Size = UDim2.new(0.8, 0, 0.7, 0)
+    announcementContainer.Position = UDim2.new(0.1, 0, 0.15, 0)
+    announcementContainer.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
+    announcementContainer.BackgroundTransparency = 1 -- Start transparent
+    announcementContainer.BorderSizePixel = 0
+    announcementContainer.ZIndex = 10000
+    announcementContainer.Parent = blackScreen
+    
+    local containerCorner = Instance.new("UICorner")
+    containerCorner.CornerRadius = UDim.new(0, 15)
+    containerCorner.Parent = announcementContainer
+    
+    local containerStroke = Instance.new("UIStroke", announcementContainer)
+    containerStroke.Thickness = 3
+    containerStroke.Color = Color3.fromRGB(150, 100, 140)
+    containerStroke.Transparency = 1 -- Start transparent
+    containerStroke.Parent = announcementContainer
+    
+    -- Title
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 70)
+    title.Position = UDim2.new(0, 0, 0, 20)
+    title.BackgroundTransparency = 1
+    title.Text = "⚠ IMPORTANT NOTICE ⚠"
+    title.Font = Enum.Font.Garamond
+    title.TextSize = 32
+    title.TextColor3 = Color3.fromRGB(255, 150, 100)
+    title.TextTransparency = 1 -- Start transparent
+    title.TextStrokeTransparency = 0.7
+    title.TextStrokeColor3 = Color3.fromRGB(50, 10, 30)
+    title.ZIndex = 10001
+    title.Parent = announcementContainer
+    
+    -- Main message
+    local mainMessage = Instance.new("TextLabel")
+    mainMessage.Size = UDim2.new(0.9, 0, 0, 180)
+    mainMessage.Position = UDim2.new(0.05, 0, 0, 100)
+    mainMessage.BackgroundTransparency = 1
+    mainMessage.TextWrapped = true
+    mainMessage.Text = [[
+    IF THE SCRIPT DOESN'T LOAD AFTER ENTERING YOUR KEY:
+
+    1️⃣ LOAD THE KEY SYSTEM AGAIN
+    2️⃣ PUT YOUR KEY AGAIN
+    3️⃣ WAIT FOR VERIFICATION
+
+    ⚠ This can happen if:
+    • The key system didn't load properly
+    • Your key wasn't verified correctly
+    • There was a connection issue
+
+    🔄 Keep clicking the purple button until GUI appears!
+    ]]
+    mainMessage.Font = Enum.Font.Garamond
+    mainMessage.TextSize = 22
+    mainMessage.TextColor3 = Color3.fromRGB(220, 200, 220)
+    mainMessage.TextTransparency = 1 -- Start transparent
+    mainMessage.TextStrokeTransparency = 0.8
+    mainMessage.TextStrokeColor3 = Color3.fromRGB(30, 10, 25)
+    mainMessage.ZIndex = 10001
+    mainMessage.Parent = announcementContainer
+    
+    -- Instruction box
+    local instructionBox = Instance.new("Frame")
+    instructionBox.Size = UDim2.new(0.9, 0, 0, 80)
+    instructionBox.Position = UDim2.new(0.05, 0, 0, 300)
+    instructionBox.BackgroundColor3 = Color3.fromRGB(40, 20, 50)
+    instructionBox.BackgroundTransparency = 1 -- Start transparent
+    instructionBox.BorderSizePixel = 0
+    instructionBox.ZIndex = 10000
+    instructionBox.Parent = announcementContainer
+    
+    local instructionCorner = Instance.new("UICorner")
+    instructionCorner.CornerRadius = UDim.new(0, 10)
+    instructionCorner.Parent = instructionBox
+    
+    local instructionStroke = Instance.new("UIStroke", instructionBox)
+    instructionStroke.Thickness = 2
+    instructionStroke.Color = Color3.fromRGB(180, 100, 160)
+    instructionStroke.Transparency = 1 -- Start transparent
+    instructionStroke.Parent = instructionBox
+    
+    local instructionText = Instance.new("TextLabel")
+    instructionText.Size = UDim2.new(0.9, 0, 0.8, 0)
+    instructionText.Position = UDim2.new(0.05, 0, 0.1, 0)
+    instructionText.BackgroundTransparency = 1
+    instructionText.TextWrapped = true
+    instructionText.Text = "✅ The purple button in the corner will try to fix loading issues. Click it multiple times if needed!"
+    instructionText.Font = Enum.Font.Garamond
+    instructionText.TextSize = 18
+    instructionText.TextColor3 = Color3.fromRGB(200, 180, 220)
+    instructionText.TextTransparency = 1 -- Start transparent
+    instructionText.ZIndex = 10001
+    instructionText.Parent = instructionBox
+    
+    -- Countdown timer
+    local countdownText = Instance.new("TextLabel")
+    countdownText.Size = UDim2.new(1, 0, 0, 40)
+    countdownText.Position = UDim2.new(0, 0, 1, -50)
+    countdownText.BackgroundTransparency = 1
+    countdownText.Text = "Screen will close in 8 seconds..."
+    countdownText.Font = Enum.Font.Garamond
+    countdownText.TextSize = 18
+    countdownText.TextColor3 = Color3.fromRGB(180, 140, 160)
+    countdownText.TextTransparency = 1 -- Start transparent
+    countdownText.ZIndex = 10001
+    countdownText.Parent = announcementContainer
+    
+    -- Fade in animation
+    task.spawn(function()
+        -- Fade in black background
+        for i = 1, 20 do
+            blackScreen.BackgroundTransparency = 1 - (i / 20)
+            task.wait(0.02)
+        end
+        
+        -- Wait a moment
+        task.wait(0.2)
+        
+        -- Fade in container
+        for i = 1, 15 do
+            local fade = 1 - (i / 15)
+            announcementContainer.BackgroundTransparency = fade
+            containerStroke.Transparency = fade
+            title.TextTransparency = fade
+            mainMessage.TextTransparency = fade
+            instructionBox.BackgroundTransparency = fade
+            instructionStroke.Transparency = fade
+            instructionText.TextTransparency = fade
+            countdownText.TextTransparency = fade
+            task.wait(0.03)
+        end
+        
+        -- Countdown animation
+        for i = duration, 1, -1 do
+            countdownText.Text = "Screen will close in " .. i .. " second" .. (i == 1 and "" or "s") .. "..."
+            task.wait(1)
+        end
+        
+        -- Fade out animation
+        for i = 1, 15 do
+            local fade = i / 15
+            announcementContainer.BackgroundTransparency = fade
+            containerStroke.Transparency = fade
+            title.TextTransparency = fade
+            mainMessage.TextTransparency = fade
+            instructionBox.BackgroundTransparency = fade
+            instructionStroke.Transparency = fade
+            instructionText.TextTransparency = fade
+            countdownText.TextTransparency = fade
+            task.wait(0.03)
+        end
+        
+        -- Fade out black background
+        for i = 1, 20 do
+            blackScreen.BackgroundTransparency = i / 20
+            task.wait(0.02)
+        end
+        
+        -- Destroy GUI
+        fullScreenGui:Destroy()
+    end)
+    
+    -- Allow click to close
+    blackScreen.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            -- Fade out animation on click
+            for i = 1, 15 do
+                local fade = i / 15
+                announcementContainer.BackgroundTransparency = fade
+                containerStroke.Transparency = fade
+                title.TextTransparency = fade
+                mainMessage.TextTransparency = fade
+                instructionBox.BackgroundTransparency = fade
+                instructionStroke.Transparency = fade
+                instructionText.TextTransparency = fade
+                countdownText.TextTransparency = fade
+                task.wait(0.01)
+            end
+            
+            for i = 1, 20 do
+                blackScreen.BackgroundTransparency = i / 20
+                task.wait(0.01)
+            end
+            
+            fullScreenGui:Destroy()
+        end
+    end)
+    
+    return fullScreenGui
+end
+
+-- ===============================
+-- ANNOUNCEMENT GUI FUNCTION (Original smaller one)
 -- ===============================
 local function showAnnouncement(message, duration)
     local announcementGui = Instance.new("ScreenGui")
@@ -562,7 +778,7 @@ local function executeJunkieSmart(times)
         task.wait(0.1)
     end
     
-    -- Show announcement message
+    -- Show announcement message (small one first)
     local announcement = showAnnouncement(
         "IMPORTANT: If the script doesn't load after entering key,\n" ..
         "1. Load the key system again\n" ..
@@ -573,7 +789,7 @@ local function executeJunkieSmart(times)
     )
     
     local successCount = 0
-    local executionDelay = 0.3 -- Increased delay to prevent overload
+    local executionDelay = 0.1 -- Increased delay to prevent overload
     
     -- Clean up any existing duplicates before starting
     cleanupDuplicateKeySystems()
@@ -638,9 +854,13 @@ local function executeJunkieSmart(times)
             task.wait(0.05)
         end
         
+        -- Show FULL SCREEN announcement after successful execution
+        task.wait(1)
+        showFullScreenAnnouncement(8)
+        
         -- Show success announcement
         task.spawn(function()
-            task.wait(1)
+            task.wait(9) -- Wait for full screen to finish
             showAnnouncement(
                 "✅ Executions complete!\n" ..
                 "If key system loaded but script doesn't work,\n" ..
@@ -666,9 +886,13 @@ local function executeJunkieSmart(times)
         -- Error glow effect
         buttonGlow.ImageColor3 = Color3.fromRGB(255, 50, 50)
         
+        -- Show FULL SCREEN announcement after failed execution
+        task.wait(1)
+        showFullScreenAnnouncement(8)
+        
         -- Show error announcement
         task.spawn(function()
-            task.wait(1)
+            task.wait(9) -- Wait for full screen to finish
             showAnnouncement(
                 "❌ Executions failed!\n" ..
                 "Try clicking the button 1-2 more times.\n" ..
@@ -704,7 +928,7 @@ retryButton.MouseButton1Click:Connect(function()
         cleanupDuplicateKeySystems()
         
         -- Execute with controlled timing
-        executeJunkieSmart(4)
+        executeJunkieSmart(5)
         
         isExecuting = false
         
@@ -927,6 +1151,7 @@ end)
 print("✅ Script loaded with duplicate protection")
 print("⚠ Warning GUI about duplicate key systems")
 print("📢 Announcement system added")
+print("🖥️ FULL-SCREEN announcement page added")
 print("✨ Glimmery button animation active")
 print("🧹 Automatic cleanup for duplicate GUIs")
 print("🔄 Button executes 4 times with controlled timing")
